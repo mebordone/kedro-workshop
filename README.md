@@ -1,7 +1,7 @@
 # kedro-workshop
 Taller de kedro y jupyter
 
-# Problema
+# Problema - California Housing
 Este es el conjunto de datos utilizado en el segundo capítulo del reciente libro de Aurélien Géron 'Hands-On Machine learning with Scikit-Learn and TensorFlow'. Sirve como una excelente introducción a la implementación de algoritmos de aprendizaje automático, ya que requiere una limpieza de datos rudimentaria, tiene una lista de variables fácilmente comprensible y se encuentra en un tamaño óptimo entre ser demasiado de juguete y demasiado engorroso.
 
 Los datos contienen información del censo de California de 1990. Así que, aunque puede que no le ayude a predecir los precios actuales de la vivienda como el conjunto de datos Zestimate de Zillow, proporciona un conjunto de datos introductorio accesible para enseñar a la gente los fundamentos del aprendizaje automático.
