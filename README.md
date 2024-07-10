@@ -18,8 +18,8 @@ Los datos se refieren a las casas que se encuentran en un determinado distrito d
 - población
 - hogares
 - ingresos_medianos
-- valor_medio_de_la_vivienda
 - proximidad_al_océano
+- valor_medio_de_la_vivienda (valor que quiero predecir)
 
 Descripción:
 1. longitude: A measure of how far west a house is; a higher value is farther west
