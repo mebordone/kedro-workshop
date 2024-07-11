@@ -43,7 +43,9 @@ housing:
   type: pandas.CSVDataset
   filepath: data/01_raw/housing.csv
 
-# preprocessed_housing:
+preprocessed_housing:
+  type: pandas.CSVDataset
+  filepath: data/04_feature/preprocessed_housing.csv
 #   type: pandas.ParquetDataset
 #   filepath: data/02_intermediate/preprocessed_housing.pq
 

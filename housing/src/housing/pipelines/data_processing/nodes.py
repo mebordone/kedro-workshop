@@ -9,8 +9,11 @@ import pandas as pd
 # Combinar atributos - armando pipelines y transformadores manuales
 from sklearn.base import BaseEstimator, TransformerMixin
 import numpy as np
+from sklearn.model_selection import StratifiedShuffleSplit
 
 # Definir la clase del transformador personalizado para crear columnas nuevas
+
+
 class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
     def __init__(self, add_bedrooms_per_room=True):
         self.add_bedrooms_per_room = add_bedrooms_per_room
@@ -35,6 +38,43 @@ class CombinedAttributesAdder(BaseEstimator, TransformerMixin):
 
         return X_transformed
 
+def split_data(housing: pd.DataFrame, parameters: Dict) -> Tuple:
+    """Splits data into features and targets training and test sets.
+
+    Args:
+        data: Data containing features and target.
+        parameters: Parameters defined in parameters/data_science.yml.
+    Returns:
+        Split data.
+    """
+    # X = data[parameters["features"]]
+    # y = data["price"]
+    # X_train, X_test, y_train, y_test = train_test_split(
+    #     X, y, test_size=parameters["test_size"], random_state=parameters["random_state"]
+    # )
+
+    income_cat = pd.cut(housing["median_income"], 
+                        bins=[0, 1.5, 3, 4.5, 6, 16],
+                        labels=[1, 2, 3, 4, 5])
+    income_cat.head()
+
+    split_object = StratifiedShuffleSplit(n_splits=1,
+                                          test_size=parameters["test_size"],
+                                          random_state=parameters["random_state"])
+    gen_obj = split_object.split(housing, income_cat)
+    train_ind, test_ind = next(gen_obj)
+
+    strat_train_set = housing.loc[train_ind]
+    strat_test_set = housing.loc[test_ind]
+
+    X_train = strat_train_set
+    y_train = strat_train_set['median_house_value'].copy()
+
+    X_test = strat_test_set
+    y_test = strat_test_set["median_house_value"].copy()
+
+    return X_train, X_test, y_train, y_test
+
 
 def preprocess_housing(housing: pd.DataFrame) -> Tuple[pd.DataFrame, Dict]:
     """Preprocesses the data for houses.
@@ -46,7 +86,7 @@ def preprocess_housing(housing: pd.DataFrame) -> Tuple[pd.DataFrame, Dict]:
     train_copy = housing.copy()
     # Crea un objeto SimpleImputer con estrategia de imputación mediana
     imputer = SimpleImputer(strategy="median")
-
+    
     # Variable que representa el número promedio de habitaciones por hogar
     train_copy["rooms_per_household"] = train_copy["total_rooms"] / \
         train_copy["households"]
@@ -100,4 +140,4 @@ def preprocess_housing(housing: pd.DataFrame) -> Tuple[pd.DataFrame, Dict]:
 
     # Aplicar el pipeline completo a los datos de entrenamiento 'train_data'
     housing_prepared = full_pipeline.fit_transform(train_copy)
-    return housing_prepared
+    return pd.DataFrame(housing_prepared)

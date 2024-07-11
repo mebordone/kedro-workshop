@@ -1,1 +1,1 @@
-{"housing": {"rows": 20640, "columns": 10, "file_size": 1423529}}
+{"housing": {"rows": 20640, "columns": 10, "file_size": 1423528}, "X_train": {"rows": 16512, "columns": 10}, "X_test": {"rows": 4128, "columns": 10}, "X_test_preprocessed": {"rows": 4128, "columns": 20}, "preprocessed_housing": {"rows": 16512, "columns": 20, "file_size": 5244700}}

@@ -5,43 +5,16 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import max_error, mean_absolute_error, r2_score
 from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_squared_error
+
 import sklearn
 from sklearn.model_selection import StratifiedShuffleSplit
 
 
-def split_data(housing: pd.DataFrame, parameters: Dict) -> Tuple:
-    """Splits data into features and targets training and test sets.
 
-    Args:
-        data: Data containing features and target.
-        parameters: Parameters defined in parameters/data_science.yml.
-    Returns:
-        Split data.
-    """
-    # X = data[parameters["features"]]
-    # y = data["price"]
-    # X_train, X_test, y_train, y_test = train_test_split(
-    #     X, y, test_size=parameters["test_size"], random_state=parameters["random_state"]
-    # )
-    
-    income_cat = pd.cut(housing["median_income"], bins=[0, 1.5, 3, 4.5, 6, 16], labels=[1, 2, 3, 4, 5])
-    income_cat.head()
-
-
-
-    split_object = StratifiedShuffleSplit(n_splits=1, 
-                                          test_size=parameters["test_size"], 
-                                          random_state=parameters["random_state"])
-    gen_obj = split_object.split(housing, income_cat)
-    train_ind, test_ind = next(gen_obj)
-    strat_train_set = housing.loc[train_ind]
-    strat_test_set = housing.loc[test_ind]
-    
-    
-    return X_train, X_test, y_train, y_test
-
-
-def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> LinearRegression:
+def train_model(housing_prepared: pd.DataFrame, 
+                housing_labels: pd.Series) -> LinearRegression:
     """Trains the linear regression model.
 
     Args:
@@ -51,13 +24,24 @@ def train_model(X_train: pd.DataFrame, y_train: pd.Series) -> LinearRegression:
     Returns:
         Trained model.
     """
-    regressor = LinearRegression()
-    regressor.fit(X_train, y_train)
-    return regressor
+    forest_reg = RandomForestRegressor()
+    # Inputs necesarios para la funcion fit: hounsing_prepared, housing_labels
+    # Donde está definido housing_labels?
+    # Tienen los mismos nombres en el código?
+
+    forest_reg.fit(housing_prepared, housing_labels)
+    predictions = forest_reg.predict(housing_prepared)
+
+    # Medir el error utilizando el RMSE con los datos de entrenamiento
+    forest_rmse = mean_squared_error(
+        housing_labels, predictions, squared=False)
+    print("RMSE del modelo de Random Forest (datos de entrenamiento):", 
+          forest_rmse)
+    return forest_reg
 
 
 def evaluate_model(
-    regressor: LinearRegression, X_test: pd.DataFrame, y_test: pd.Series
+    forest_reg: LinearRegression, X_test: pd.DataFrame, y_test: pd.Series
 ) -> Dict[str, float]:
     """Calculates and logs the coefficient of determination.
 
@@ -66,10 +50,19 @@ def evaluate_model(
         X_test: Testing data of independent features.
         y_test: Testing data for price.
     """
-    y_pred = regressor.predict(X_test)
-    score = r2_score(y_test, y_pred)
-    mae = mean_absolute_error(y_test, y_pred)
-    me = max_error(y_test, y_pred)
-    logger = logging.getLogger(__name__)
-    logger.info("Model has a coefficient R^2 of %.3f on test data.", score)
-    return {"r2_score": score, "mae": mae, "max_error": me}
+    # Obtener X_test y y_test del conjunto de prueba
+
+    # Aplicar la transformación completa a X_test
+    X_test_prepared = X_test
+
+    final_model = forest_reg
+
+    # Realizar predicciones sobre X_test_prepared utilizando el modelo final
+    final_predictions = final_model.predict(X_test_prepared)
+
+    # Calcular el RMSE entre las etiquetas reales (y_test) 
+    # y las predicciones finales
+    final_rmse = mean_squared_error(y_test, final_predictions, squared=False)
+
+    print("RMSE final en el conjunto de prueba:", final_rmse)
+    return {"RMSE": final_rmse}
