@@ -48,15 +48,10 @@ def preprocess_new_data(new_data: pd.DataFrame) -> pd.DataFrame:
     Returns:
     """
 
-    # Convertir X_new a un DataFrame con las columnas correspondientes
-    columns = ['longitude', 'latitude', 'housing_median_age',
-               'total_rooms', 'total_bedrooms', 'population',
-               'households', 'median_income', 'ocean_proximity',
-               'median_house_value']
-    
-    print(len(columns))
-    X_new_df = pd.DataFrame([new_data], columns=columns)
-    X_new_df.to_csv('new_data.csv')
+    print((new_data.columns))
+    X_new_df = pd.DataFrame([new_data])
+
+    print(X_new_df)
     train_copy = X_new_df
     # Crea un objeto SimpleImputer con estrategia de imputación mediana
     imputer = SimpleImputer(strategy="median")

@@ -9,7 +9,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             func=preprocess_new_data,
             inputs=["new_data"],
             outputs="preprocessed_new_data",
-            name="preprocess_new_data",
+            name="preprocess_new_data_node",
         ),
         node(
             func=predict,
