@@ -8,8 +8,10 @@ def create_pipeline(**kwargs) -> Pipeline:
         [
             node(
                 func=train_model,
-                inputs=["preprocessed_housing", "housing_labels"],
-                outputs="regressor",
+                inputs=["preprocessed_housing",
+                        "housing_labels"],
+                outputs=["modelo_random_forest",
+                         "final_model"],
                 name="train_model_node",
             ),
             node(

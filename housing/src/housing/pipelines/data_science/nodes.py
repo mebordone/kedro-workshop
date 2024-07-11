@@ -10,6 +10,7 @@ from sklearn.metrics import mean_squared_error
 
 import sklearn
 from sklearn.model_selection import StratifiedShuffleSplit
+from joblib import dump
 
 
 
@@ -37,6 +38,8 @@ def train_model(housing_prepared: pd.DataFrame,
         housing_labels, predictions, squared=False)
     print("RMSE del modelo de Random Forest (datos de entrenamiento):", 
           forest_rmse)
+
+    dump(forest_reg, 'modelo_random_forest.joblib')
     return forest_reg
 
 

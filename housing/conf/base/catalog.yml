@@ -39,17 +39,26 @@
 # (transcoding), templating and a way to reuse arguments that are frequently repeated. See more here:
 # https://kedro.readthedocs.io/en/stable/data/data_catalog.html
 
+new_data:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/new_data.csv
+
 housing:
   type: pandas.CSVDataset
   filepath: data/01_raw/housing.csv
 
 preprocessed_housing:
   type: pandas.CSVDataset
-  filepath: data/04_feature/preprocessed_housing.csv
+  filepath: data/04_feature/preprocessed_ housing.csv
 #   type: pandas.ParquetDataset
 #   filepath: data/02_intermediate/preprocessed_housing.pq
 
 final_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/regressor.pickle
+  versioned: true
+
+final_prod_model:
   type: pickle.PickleDataset
   filepath: data/06_models/regressor.pickle
   versioned: true
