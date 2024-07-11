@@ -16,7 +16,7 @@ def create_pipeline(**kwargs) -> Pipeline:
             ),
             node(
                 func=evaluate_model,
-                inputs=["regressor", "X_test_preprocessed", "y_test"],
+                inputs=["final_model", "X_test_preprocessed", "y_test"],
                 name="evaluate_model_node",
                 outputs="metrics",
             ),
